@@ -22,10 +22,6 @@ const latestLife = (await getCollection('life')).sort((a, b) =>
 const latestThoughts = (await getCollection('thoughts')).sort((a, b) => 
 	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 ).slice(0, 3);
-
-const latestBlog = (await getCollection('blog')).sort((a, b) => 
-	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-).slice(0, 3);
 ---
 
 <!doctype html>
@@ -295,27 +291,6 @@ const latestBlog = (await getCollection('blog')).sort((a, b) =>
 							</a>
 						</div>
 					)) : <div class="empty">暂无思路记录</div>}
-				</div>
-			</section>
-
-			<!-- 最新博客 -->
-			<section class="section">
-				<div class="section-header">
-					<h2>📝 博客文章</h2>
-					<a href="/blog">查看全部 →</a>
-				</div>
-				<div class="card-list">
-					{latestBlog.length > 0 ? latestBlog.map(post => (
-						<div class="card">
-							<a href={`/blog/${post.id}/`}>
-								<h3>{post.data.title}</h3>
-								<p>{post.data.description}</p>
-								<div class="meta">
-									<FormattedDate date={post.data.pubDate} />
-								</div>
-							</a>
-						</div>
-					)) : <div class="empty">暂无博客文章，敬请期待</div>}
 				</div>
 			</section>
 		</main>
