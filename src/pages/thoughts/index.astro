@@ -18,6 +18,22 @@ const thoughts = (await getCollection('thoughts')).sort(
 		<style>
 			main {
 				width: 960px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 3em 1em;
+			}
+			h1 {
+				text-align: center;
+				margin-bottom: 0.5em;
+				background: linear-gradient(135deg, #fff 0%, #00d4ff 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+			.subtitle {
+				text-align: center;
+				color: rgba(255, 255, 255, 0.6);
+				margin-bottom: 3rem;
 			}
 			ul {
 				display: flex;
@@ -34,41 +50,43 @@ const thoughts = (await getCollection('thoughts')).sort(
 				text-decoration: none;
 				transition: 0.2s ease;
 			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
+			.card {
+				background: linear-gradient(135deg, rgba(22, 33, 62, 0.8) 0%, rgba(26, 26, 46, 0.6) 100%);
+				border-radius: 16px;
+				padding: 1.5rem;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				transition: all 0.3s ease;
+				height: 100%;
 			}
-			ul li:first-child img {
-				width: 100%;
+			.card:hover {
+				transform: translateY(-4px);
+				border-color: var(--accent);
+				box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15);
 			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
+			.card a {
 				display: block;
+				color: inherit;
 			}
 			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
+				margin: 0 0 0.8rem;
+				color: #fff;
+				font-size: 1.2rem;
+				line-height: 1.4;
 			}
 			.date {
 				margin: 0;
-				color: rgb(var(--gray));
+				color: rgba(255, 255, 255, 0.5);
+				font-size: 0.9rem;
 			}
 			.category {
 				display: inline-block;
-				background: rgb(var(--accent));
-				color: white;
+				background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+				color: #000;
 				padding: 0.2rem 0.8rem;
 				border-radius: 12px;
 				font-size: 0.85rem;
-				margin-top: 0.5rem;
+				font-weight: 600;
+				margin-top: 0.8rem;
 			}
 			.status {
 				display: inline-block;
@@ -80,26 +98,23 @@ const thoughts = (await getCollection('thoughts')).sort(
 			.status.draft { background: #fbbf24; color: #000; }
 			.status.published { background: #10b981; color: #fff; }
 			.status.archived { background: #6b7280; color: #fff; }
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
+			.empty {
+				text-align: center;
+				color: rgba(255, 255, 255, 0.4);
+				padding: 3rem;
+				background: rgba(255, 255, 255, 0.03);
+				border-radius: 16px;
+				border: 1px dashed rgba(255, 255, 255, 0.1);
 			}
 			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
+				main {
+					padding: 1em;
 				}
 				ul li {
 					width: 100%;
-					text-align: center;
 				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
+				.card {
+					padding: 1.2rem;
 				}
 			}
 		</style>
@@ -108,24 +123,24 @@ const thoughts = (await getCollection('thoughts')).sort(
 		<Header />
 		<main>
 			<h1>💡 思路记录</h1>
-			<p>想法、笔记、灵感收集</p>
+			<p class="subtitle">想法、笔记、灵感收集</p>
 			<section>
 				<ul>
 					{
 						thoughts.map((post) => (
 							<li>
-								<a href={`/thoughts/${post.id}/`}>
-									<img width={720} height={360} src={post.data.heroImage?.src ?? '/blog-placeholder-4.jpg'} alt="" />
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-									{post.data.category && <span class="category">{post.data.category}</span>}
-									<span class={`status ${post.data.status}`}>{post.data.status}</span>
-								</a>
+								<div class="card">
+									<a href={`/thoughts/${post.id}/`}>
+										<h4 class="title">{post.data.title}</h4>
+										<p class="date"><FormattedDate date={post.data.pubDate} /></p>
+										{post.data.category && <span class="category">{post.data.category}</span>}
+										<span class={`status ${post.data.status}`}>{post.data.status}</span>
+									</a>
+								</div>
 							</li>
 						))
 					}
+					{thoughts.length === 0 && <li class="empty">暂无思路记录</li>}
 				</ul>
 			</section>
 		</main>
