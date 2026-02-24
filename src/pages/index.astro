@@ -1,0 +1,223 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import FormattedDate from '../components/FormattedDate.astro';
+
+// 获取各分类最新内容
+const latestNews = (await getCollection('news')).sort((a, b) => 
+	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 3);
+
+const latestLife = (await getCollection('life')).sort((a, b) => 
+	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 3);
+
+const latestThoughts = (await getCollection('thoughts')).sort((a, b) => 
+	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 3);
+
+const latestBlog = (await getCollection('blog')).sort((a, b) => 
+	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 3);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.hero {
+				text-align: center;
+				padding: 3rem 0;
+				background: linear-gradient(135deg, rgb(var(--accent)) 0%, rgb(var(--accent-dark)) 100%);
+				color: white;
+				margin: 0 -1em 2rem;
+			}
+			.hero h1 {
+				font-size: 3rem;
+				margin: 0 0 0.5rem;
+			}
+			.hero p {
+				font-size: 1.25rem;
+				opacity: 0.9;
+				margin: 0;
+			}
+			.section {
+				margin: 3rem 0;
+			}
+			.section-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 1rem;
+				border-bottom: 2px solid rgb(var(--accent));
+				padding-bottom: 0.5rem;
+			}
+			.section-header h2 {
+				margin: 0;
+				font-size: 1.5rem;
+			}
+			.section-header a {
+				color: rgb(var(--accent));
+				text-decoration: none;
+				font-size: 0.9rem;
+			}
+			.section-header a:hover {
+				text-decoration: underline;
+			}
+			.card-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: 1.5rem;
+			}
+			.card {
+				background: white;
+				border-radius: 12px;
+				padding: 1.5rem;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+				transition: transform 0.2s, box-shadow 0.2s;
+			}
+			.card:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+			}
+			.card a {
+				text-decoration: none;
+				color: inherit;
+			}
+			.card h3 {
+				margin: 0 0 0.5rem;
+				font-size: 1.1rem;
+				color: rgb(var(--black));
+			}
+			.card p {
+				margin: 0;
+				color: rgb(var(--gray));
+				font-size: 0.9rem;
+				line-height: 1.5;
+			}
+			.card .meta {
+				display: flex;
+				gap: 1rem;
+				margin-top: 1rem;
+				font-size: 0.8rem;
+				color: rgb(var(--gray));
+			}
+			.empty {
+				text-align: center;
+				color: rgb(var(--gray));
+				padding: 2rem;
+			}
+			@media (max-width: 720px) {
+				.hero h1 {
+					font-size: 2rem;
+				}
+				.card-list {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		
+		<div class="hero">
+			<h1>🚀 我的数字花园</h1>
+			<p>记录新闻、生活与思考</p>
+		</div>
+		
+		<main>
+			<!-- 最新新闻 -->
+			<section class="section">
+				<div class="section-header">
+					<h2>📰 最新新闻</h2>
+					<a href="/news">查看全部 →</a>
+				</div>
+				<div class="card-list">
+					{latestNews.length > 0 ? latestNews.map(post => (
+						<div class="card">
+							<a href={`/news/${post.id}/`}>
+								<h3>{post.data.title}</h3>
+								<p>{post.data.description}</p>
+								<div class="meta">
+									<FormattedDate date={post.data.pubDate} />
+									{post.data.source && <span>来源: {post.data.source}</span>}
+								</div>
+							</a>
+						</div>
+					)) : <div class="empty">暂无新闻</div>}
+				</div>
+			</section>
+
+			<!-- 最新生活 -->
+			<section class="section">
+				<div class="section-header">
+					<h2>🌟 生活随记</h2>
+					<a href="/life">查看全部 →</a>
+				</div>
+				<div class="card-list">
+					{latestLife.length > 0 ? latestLife.map(post => (
+						<div class="card">
+							<a href={`/life/${post.id}/`}>
+								<h3>{post.data.title}</h3>
+								<p>{post.data.description}</p>
+								<div class="meta">
+									<FormattedDate date={post.data.pubDate} />
+									{post.data.mood && <span>心情: {post.data.mood}</span>}
+								</div>
+							</a>
+						</div>
+					)) : <div class="empty">暂无生活记录</div>}
+				</div>
+			</section>
+
+			<!-- 最新思路 -->
+			<section class="section">
+				<div class="section-header">
+					<h2>💡 思路记录</h2>
+					<a href="/thoughts">查看全部 →</a>
+				</div>
+				<div class="card-list">
+					{latestThoughts.length > 0 ? latestThoughts.map(post => (
+						<div class="card">
+							<a href={`/thoughts/${post.id}/`}>
+								<h3>{post.data.title}</h3>
+								<p>{post.data.description}</p>
+								<div class="meta">
+									<FormattedDate date={post.data.pubDate} />
+									{post.data.category && <span>{post.data.category}</span>}
+								</div>
+							</a>
+						</div>
+					)) : <div class="empty">暂无思路记录</div>}
+				</div>
+			</section>
+
+			<!-- 最新博客 -->
+			<section class="section">
+				<div class="section-header">
+					<h2>📝 博客文章</h2>
+					<a href="/blog">查看全部 →</a>
+				</div>
+				<div class="card-list">
+					{latestBlog.length > 0 ? latestBlog.map(post => (
+						<div class="card">
+							<a href={`/blog/${post.id}/`}>
+								<h3>{post.data.title}</h3>
+								<p>{post.data.description}</p>
+								<div class="meta">
+									<FormattedDate date={post.data.pubDate} />
+								</div>
+							</a>
+						</div>
+					)) : <div class="empty">暂无博客文章</div>}
+				</div>
+			</section>
+		</main>
+		
+		<Footer />
+	</body>
+</html>

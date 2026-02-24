@@ -1,0 +1,119 @@
+---
+import { Image } from 'astro:assets';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+	pubDate: Date;
+	updatedDate?: Date;
+	heroImage?: any;
+	category?: string;
+	status?: string;
+}
+
+const { title, description, pubDate, updatedDate, heroImage, category, status } = Astro.props;
+---
+
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={title} description={description || ''} />
+		<style>
+			main {
+				width: calc(100% - 2em);
+				max-width: 100%;
+				margin: 0;
+			}
+			.hero-image {
+				width: 100%;
+			}
+			.hero-image img {
+				display: block;
+				margin: 0 auto;
+				border-radius: 12px;
+				box-shadow: var(--box-shadow);
+			}
+			.prose {
+				width: 720px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 1em;
+				color: rgb(var(--gray-dark));
+			}
+			.title {
+				margin-bottom: 1em;
+				padding: 1em 0;
+				text-align: center;
+				line-height: 1;
+			}
+			.title h1 {
+				margin: 0 0 0.5em 0;
+			}
+			.date {
+				margin-bottom: 0.5em;
+				color: rgb(var(--gray));
+			}
+			.meta {
+				display: flex;
+				gap: 1rem;
+				justify-content: center;
+				flex-wrap: wrap;
+				margin-top: 1rem;
+			}
+			.category {
+				background: rgb(var(--accent));
+				color: white;
+				padding: 0.2rem 0.8rem;
+				border-radius: 12px;
+				font-size: 0.9rem;
+			}
+			.status {
+				padding: 0.2rem 0.6rem;
+				border-radius: 4px;
+				font-size: 0.8rem;
+			}
+			.status.draft { background: #fbbf24; color: #000; }
+			.status.published { background: #10b981; color: #fff; }
+			.status.archived { background: #6b7280; color: #fff; }
+			.last-updated-on {
+				font-style: italic;
+			}
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<article>
+				<div class="hero-image">
+					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+				</div>
+				<div class="prose">
+					<div class="title">
+						<div class="date">
+							<FormattedDate date={pubDate} />
+							{
+								updatedDate && (
+									<div class="last-updated-on">
+										更新于 <FormattedDate date={updatedDate} />
+									</div>
+								)
+							}
+						</div>
+						<h1>{title}</h1>
+						<div class="meta">
+							{category && <span class="category">{category}</span>}
+							{status && <span class={`status ${status}`}>{status}</span>}
+						</div>
+						<hr />
+					</div>
+					<slot />
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
