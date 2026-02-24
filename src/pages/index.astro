@@ -11,6 +11,10 @@ const latestNews = (await getCollection('news')).sort((a, b) =>
 	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 ).slice(0, 3);
 
+const latestStocks = (await getCollection('stocks')).sort((a, b) => 
+	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 1);
+
 const latestLife = (await getCollection('life')).sort((a, b) => 
 	b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 ).slice(0, 3);
@@ -142,6 +146,40 @@ const latestBlog = (await getCollection('blog')).sort((a, b) =>
 				border-radius: 16px;
 				border: 1px dashed rgba(255, 255, 255, 0.1);
 			}
+			/* 今日说股样式 */
+			.stocks-header {
+				border-bottom-color: #00ff88;
+			}
+			.stocks-header h2 {
+				background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+			.stock-card {
+				border-left: 4px solid #00ff88;
+			}
+			.stock-card:hover {
+				border-color: #00ff88;
+				box-shadow: 0 8px 32px rgba(0, 255, 136, 0.15);
+			}
+			.stock-index {
+				background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+				color: #000;
+				padding: 0.5rem 1rem;
+				border-radius: 8px;
+				font-weight: 600;
+				font-size: 0.95rem;
+				margin: 1rem 0;
+				display: inline-block;
+			}
+			.tag {
+				background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 212, 255, 0.2) 100%);
+				color: #00ff88;
+				padding: 0.2rem 0.6rem;
+				border-radius: 12px;
+				font-size: 0.85rem;
+			}
 			@media (max-width: 720px) {
 				.hero {
 					padding: 3rem 1rem;
@@ -186,6 +224,33 @@ const latestBlog = (await getCollection('blog')).sort((a, b) =>
 							</a>
 						</div>
 					)) : <div class="empty">暂无新闻</div>}
+				</div>
+			</section>
+
+			<!-- 今日说股 -->
+			<section class="section">
+				<div class="section-header stocks-header">
+					<h2>📈 今日说股</h2>
+					<a href="/stocks">查看全部 →</a>
+				</div>
+				<div class="card-list">
+					{latestStocks.length > 0 ? latestStocks.map(post => (
+						<div class="card stock-card">
+							<a href={`/stocks/${post.id}/`}>
+								<h3>{post.data.title}</h3>
+								<p>{post.data.description}</p>
+								{post.data.marketIndex && (
+									<div class="stock-index">{post.data.marketIndex}</div>
+								)}
+								<div class="meta">
+									<FormattedDate date={post.data.pubDate} />
+									{post.data.topGainers && (
+										<span class="tag">📈 {post.data.topGainers.slice(0, 3).join('、')}</span>
+									)}
+								</div>
+							</a>
+						</div>
+					)) : <div class="empty">暂无股票分析</div>}
 				</div>
 			</section>
 

@@ -56,4 +56,19 @@ const thoughts = defineCollection({
 		}),
 });
 
-export const collections = { blog, news, life, thoughts };
+// 今日说股
+const stocks = defineCollection({
+	loader: glob({ base: './src/content/stocks', pattern: '**/*.{md,mdx}' }),
+	schema: ({ image }) =>
+		z.object({
+			title: z.string(),
+			description: z.string().optional(),
+			pubDate: z.coerce.date(),
+			marketIndex: z.string().optional(),
+			topGainers: z.array(z.string()).optional(),
+			potential: z.array(z.string()).optional(),
+			heroImage: image().optional(),
+		}),
+});
+
+export const collections = { blog, news, life, thoughts, stocks };

@@ -1,0 +1,140 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const stocks = (await getCollection('stocks')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`今日说股 | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+		<style>
+			main {
+				width: 960px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 3em 1em;
+			}
+			h1 {
+				text-align: center;
+				margin-bottom: 0.5em;
+				background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+			.subtitle {
+				text-align: center;
+				color: rgba(255, 255, 255, 0.6);
+				margin-bottom: 3rem;
+			}
+			ul {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 2rem;
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+			}
+			ul li {
+				width: 100%;
+			}
+			ul li * {
+				text-decoration: none;
+				transition: 0.2s ease;
+			}
+			.card {
+				background: linear-gradient(135deg, rgba(22, 33, 62, 0.8) 0%, rgba(26, 26, 46, 0.6) 100%);
+				border-radius: 16px;
+				padding: 2rem;
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				transition: all 0.3s ease;
+			}
+			.card:hover {
+				transform: translateY(-4px);
+				border-color: #00ff88;
+				box-shadow: 0 8px 32px rgba(0, 255, 136, 0.15);
+			}
+			.card a {
+				display: block;
+				color: inherit;
+			}
+			.title {
+				margin: 0 0 1rem;
+				font-size: 1.5rem;
+				color: #fff;
+			}
+			.description {
+				color: rgba(255, 255, 255, 0.7);
+				margin-bottom: 1rem;
+				line-height: 1.6;
+			}
+			.meta {
+				display: flex;
+				gap: 1rem;
+				font-size: 0.9rem;
+				color: rgba(255, 255, 255, 0.5);
+				flex-wrap: wrap;
+			}
+			.market-index {
+				background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+				color: #000;
+				padding: 0.3rem 0.8rem;
+				border-radius: 20px;
+				font-weight: 600;
+			}
+			.empty {
+				text-align: center;
+				color: rgba(255, 255, 255, 0.4);
+				padding: 3rem;
+				background: rgba(255, 255, 255, 0.03);
+				border-radius: 16px;
+				border: 1px dashed rgba(255, 255, 255, 0.1);
+			}
+			@media (max-width: 720px) {
+				main {
+					padding: 1em;
+				}
+				.card {
+					padding: 1.5rem;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>📈 今日说股</h1>
+			<p class="subtitle">A股每日行情点评与投资机会分析</p>
+			<section>
+				<ul>
+					{
+						stocks.map((post) => (
+							<li>
+								<div class="card">
+									<a href={`/stocks/${post.id}/`}>
+										<h4 class="title">{post.data.title}</h4>
+										<p class="description">{post.data.description}</p>
+										<div class="meta">
+											<FormattedDate date={post.data.pubDate} />
+											{post.data.marketIndex && <span class="market-index">{post.data.marketIndex}</span>}
+										</div>
+									</a>
+								</div>
+							</li>
+						))
+					}
+					{stocks.length === 0 && <li class="empty">暂无股票分析</li>}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
