@@ -5,7 +5,10 @@ import HeaderLink from './HeaderLink.astro';
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<div class="logo">
+			<span class="logo-icon">🚗</span>
+			<h2><a href="/">{SITE_TITLE}</a></h2>
+		</div>
 		<div class="internal-links">
 			<HeaderLink href="/">首页</HeaderLink>
 			<HeaderLink href="/news">📰 新闻</HeaderLink>
@@ -15,9 +18,8 @@ import HeaderLink from './HeaderLink.astro';
 			<HeaderLink href="/about">关于</HeaderLink>
 		</div>
 		<div class="social-links">
-			<a href="https://github.com/withastro/astro" target="_blank">
-				<span class="sr-only">Go to Astro's GitHub repo</span>
-				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
+			<a href="https://github.com/sun-bin/ai-blog" target="_blank" title="GitHub">
+				<svg viewBox="0 0 16 16" aria-hidden="true" width="24" height="24"
 					><path
 						fill="currentColor"
 						d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"
@@ -30,50 +32,105 @@ import HeaderLink from './HeaderLink.astro';
 <style>
 	header {
 		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		padding: 0 1.5em;
+		background: linear-gradient(135deg, rgba(15, 15, 26, 0.95) 0%, rgba(26, 26, 46, 0.95) 100%);
+		backdrop-filter: blur(10px);
+		border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+		position: sticky;
+		top: 0;
+		z-index: 100;
 	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
-	}
-
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
-	}
+	
 	nav {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0.8em 0;
 	}
+	
+	.logo {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+	}
+	
+	.logo-icon {
+		font-size: 1.5em;
+		filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+	}
+	
+	h2 {
+		margin: 0;
+		font-size: 1.3em;
+		font-weight: 700;
+	}
+	
+	h2 a {
+		color: #fff;
+		text-decoration: none;
+		background: linear-gradient(135deg, #fff 0%, #00d4ff 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+	
 	.internal-links {
 		display: flex;
-		gap: 0.5rem;
+		gap: 0.3em;
+		align-items: center;
 	}
-	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
+	
+	.internal-links a {
+		padding: 0.6em 1em;
+		color: rgba(255, 255, 255, 0.8);
+		border-bottom: 2px solid transparent;
 		text-decoration: none;
 		white-space: nowrap;
+		font-size: 0.95em;
+		border-radius: 8px;
+		transition: all 0.2s ease;
 	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--accent);
+	
+	.internal-links a:hover,
+	.internal-links a.active {
+		color: #00d4ff;
+		background: rgba(0, 212, 255, 0.1);
+		border-bottom-color: #00d4ff;
 	}
-	.social-links,
-	.social-links a {
+	
+	.social-links {
 		display: flex;
+		gap: 1em;
 	}
-	@media (max-width: 720px) {
-		.internal-links {
+	
+	.social-links a {
+		color: rgba(255, 255, 255, 0.6);
+		transition: all 0.2s ease;
+	}
+	
+	.social-links a:hover {
+		color: #00d4ff;
+		filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+	}
+	
+	@media (max-width: 768px) {
+		nav {
 			flex-wrap: wrap;
-			justify-content: center;
+			gap: 1em;
 		}
-		.social-links {
-			display: none;
+		
+		.internal-links {
+			order: 3;
+			width: 100%;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+		
+		.internal-links a {
+			padding: 0.5em 0.8em;
+			font-size: 0.9em;
 		}
 	}
 </style>
